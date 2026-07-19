@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <script>
+      var target = '/feebee-frontend/';
+      sessionStorage.redirect = location.pathname + location.search + location.hash;
+      location.replace(target);
+    </script>
+    <title>feebee</title>
+  </head>
+  <body>
+    <p>feebee に移動しています。</p>
+  </body>
+</html>
