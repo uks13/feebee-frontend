@@ -3,9 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <script>
-      var target = '/feebee-frontend/';
-      sessionStorage.redirect = location.pathname + location.search + location.hash;
-      location.replace(target);
+      // GitHub Pages serves this 404 for any unknown SPA route (including the
+      // OAuth callback). Carry the requested path in the URL — not web storage —
+      // so it is inherently per-tab: immune to the mobile storage eviction that
+      // otherwise drops the callback across the cross-origin OAuth round-trip, and
+      // free of the cross-tab collisions a shared storage key would cause. The
+      // whole sub-path+query+hash is packed into a single encodeURIComponent blob
+      // behind a "?/" sentinel, which is fully reversible (unlike a "~and~" text
+      // marker, which would corrupt a deep link that literally contains it).
+      var base = '/feebee-frontend/';
+      var l = window.location;
+      // Strip the project base whether or not the trailing slash is present, so the
+      // slashless project root ("/feebee-frontend") resolves to an empty remainder
+      // (→ app root) rather than being re-nested as "/feebee-frontend/feebee-frontend".
+      var p = l.pathname;
+      var sub = p === base.slice(0, -1) ? '' : (p.indexOf(base) === 0 ? p.slice(base.length) : p.replace(/^\/+/, ''));
+      var rest = sub + l.search + l.hash;
+      l.replace(base + '?/' + encodeURIComponent(rest));
     </script>
     <title>feebee</title>
   </head>
